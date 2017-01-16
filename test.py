@@ -1,23 +1,35 @@
 #!/usr/bin/env python
 
-import dropbox
+import cmd
+import locale
+import os
+import pprint
+import shlex
+import sys
+
+PY3 = sys.version_info[0] == 3
+
+if PY3:
+    from io import StringIO
+else:
+    from StringIO import StringIO
+
+from dropbox import client, rest, session
 
 def main():
-	client = dropbox.client.DropboxClient('hCBker0RJnoAAAAAAAAALAFL8BkpF9IhH3dEHzm_q5eNbV_j--vyFiQbSZ44sBQn')
-	print 'linked account: ', client.account_info()
-	movie = 'AandavanKattalai.mkv'
-	f = open(movie, 'rb')
-	response = client.put_file('/'+movie, f)
-	print 'uploaded: ', response
-
-	folder_metadata = client.metadata('/')
-	print 'metadata: ', folder_metadata
-
-	f, metadata = client.get_file_and_metadata('/'+movie)
-	out = open('/'+movie, 'wb')
-	out.write(f.read())
-	out.close()
-	print metadata
+	myclient = client.DropboxClient('hCBker0RJnoAAAAAAAAALAFL8BkpF9IhH3dEHzm_q5eNbV_j--vyFiQbSZ44sBQn')
+	print(myclient.account_info())
+	file_path = 'Jingu.mp4'
+	bigFile = open(file_path, 'rb')
+	size = os.path.getsize(file_path)
+	chunk_size = 1024
+	uploader = myclient.get_chunked_uploader(bigFile, size)
+	print("uploading: ",size)
+	try:
+		upload = uploader.upload_chunked()
+	except rest.ErrorResponse as e:
+		print (rest.ErrorResponse)
+	uploader.finish('/'+file_path)
 
 
 if __name__ == '__main__':
