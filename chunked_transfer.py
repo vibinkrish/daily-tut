@@ -14,22 +14,12 @@ try:
 except ImportError:
     flags = None
 
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/drive-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/drive'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Drive Upload'
 
 
 def get_credentials():
-    """Gets valid user credentials from storage.
-
-    If nothing has been stored, or if the stored credentials are invalid,
-    the OAuth2 flow is completed to obtain the new credentials.
-
-    Returns:
-        Credentials, the obtained credential.
-    """
     credential_path = 'credentials.json'
 
     store = Storage(credential_path)
@@ -45,28 +35,25 @@ def get_credentials():
     return credentials
 
 def main():
-    """Shows basic usage of the Google Drive API.
-
-    Creates a Google Drive API service object and outputs the names and IDs
-    for up to 10 files.
-    """
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
-    filename = 'Jingu.mp4'
-    mimetype = 'video/mp4'
+    filename = 'ThaniOruvan.mkv'
+    mimetype = 'video/webm'
+    chunksize= 10 * 1024 * 1024
 
     file_metadata = {
       'name' : filename,
       'mimeType' : mimetype
     }
-    media = MediaFileUpload(filename,
-                            mimetype=mimetype,
-                            resumable=True)
-    file = service.files().create(body=file_metadata,
-                                        media_body=media,
-                                        fields='id').execute()
-    print('File ID: %s' % file.get('id'))
+    media = MediaFileUpload(filename, mimetype=mimetype, chunksize=chunksize,resumable=True)
+    request = service.files().create(media_body=media, body=file_metadata, fields='id')
+    response = None
+    while response is None:
+      status, response = request.next_chunk()
+      if status:
+        print("Uploaded %d%%." % int(status.progress() * 100))
+    print("Upload Complete! -  ",response.get('id'))
 
 if __name__ == '__main__':
     main()
