@@ -63,8 +63,8 @@ def main():
         response = None
         while response is None:
             status, response = request.next_chunk()
-        if status:
-            print("Uploaded %d%%." % int(status.progress() * 100))
+            if status:
+                print("Uploaded %d%%." % int(status.progress() * 100))
         print("Upload Complete! -  ",response.get('id'))
         try:
             os.remove(filename)
