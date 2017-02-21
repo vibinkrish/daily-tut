@@ -38,7 +38,7 @@ def main():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
-    chunksize= 10 * 1024 * 1024
+    chunksize= 25 * 1024 * 1024
 
     file_metadata = {
       'name' : filename,
