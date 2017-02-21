@@ -39,7 +39,7 @@ def main():
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v3', http=http)
-    chunksize= 10 * 1024 * 1024
+    chunksize= 50 * 1024 * 1024
     files = [f for f in os.listdir('.') if os.path.isfile(f)]
     for filename in files:
         extension = os.path.splitext(filename)[1]
