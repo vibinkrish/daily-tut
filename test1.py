@@ -28,7 +28,6 @@ def main():
 	try:
 		upload = uploader.upload_chunked()
 	except rest.ErrorResponse as e:
-		print (rest.ErrorResponse)
 
 
 if __name__ == '__main__':
