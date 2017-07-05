@@ -31,6 +31,3 @@ def main():
 		print (rest.ErrorResponse)
 	uploader.finish('/'+file_path)
 
-
-if __name__ == '__main__':
-    main()
