@@ -19,7 +19,7 @@ from dropbox import client, rest, session
 def main():
 	myclient = client.DropboxClient('hCBker0RJnoAAAAAAAAALAFL8BkpF9IhH3dEHzm_q5eNbV_j--vyFiQbSZ44sBQn')
 	print(myclient.account_info())
-	file_path = 'Jingu.mp3'
+	file_path = 'Jingu.abc'
 	bigFile = open(file_path, 'rb')
 	size = os.path.getsize(file_path)
 	chunk_size = 1024
