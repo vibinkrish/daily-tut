@@ -14,7 +14,6 @@ if PY3:
 else:
     from StringIO import StringIO
 
-from dropbox import client, rest, session
 
 def main():
 	myclient = client.DropboxClient('hCBker0RJnoAAAAAAAAALAFL8BkpF9IhH3dEHzm_q5eNbV_j--vyFiQbSZ44sBQn')
