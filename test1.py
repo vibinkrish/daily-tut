@@ -29,7 +29,6 @@ def main():
 		upload = uploader.upload_chunked()
 	except rest.ErrorResponse as e:
 		print (rest.ErrorResponse)
-	uploader.finish('/'+file_path)
 
 
 if __name__ == '__main__':
