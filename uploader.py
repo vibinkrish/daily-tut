@@ -17,6 +17,7 @@ except ImportError:
 SCOPES = 'https://www.googleapis.com/auth/drive'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Drive Upload'
+httplib2.debuglevel = 4
 
 
 def get_credentials():
