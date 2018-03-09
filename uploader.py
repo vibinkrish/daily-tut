@@ -42,36 +42,39 @@ def main():
     service = discovery.build('drive', 'v3', http=http)
     chunksize= 50 * 1024 * 1024
     files = [f for f in os.listdir('.') if os.path.isfile(f)]
-    for filename in files:
-        extension = os.path.splitext(filename)[1]
-        mimetype = ""
-        if extension == '.srt':
-            mimetype = "text/plain"
-        elif extension == '.avi':
-            mimetype = "video/avi"
-        elif extension == '.mp4':
-            mimetype = "video/mp4"
-        elif extension == '.mkv':
-            mimetype = "video/webm"
-        else :
-            continue
-        print(filename)
-        media = MediaFileUpload(filename, mimetype=mimetype, chunksize=chunksize,resumable=True)
-        file_metadata = {
-            'name': filename
-        }
-        request = service.files().create(media_body=media, body=file_metadata, fields='id')
-        response = None
-        while response is None:
-            status, response = request.next_chunk()
-            if status:
-                print("Uploaded %d%%." % int(status.progress() * 100))
-        print("Upload Complete! -  ",response.get('id'))
-        try:
-            os.remove(filename)
-            print("File removed -",filename)
-        except OSError:
-            pass
+
+    for path, subdirs, files in os.walk('.'):
+        for filename in files:
+            filepath = os.path.join(path, filename);
+            extension = os.path.splitext(filename)[1]
+            mimetype = ""
+            if extension == '.srt':
+                mimetype = "text/plain"
+            elif extension == '.avi':
+                mimetype = "video/avi"
+            elif extension == '.mp4':
+                mimetype = "video/mp4"
+            elif extension == '.mkv':
+                mimetype = "video/webm"
+            else :
+                continue
+            print(filename)
+            media = MediaFileUpload(filepath, mimetype=mimetype, chunksize=chunksize,resumable=True)
+            file_metadata = {
+                'name': filename
+            }
+            request = service.files().create(media_body=media, body=file_metadata, fields='id')
+            response = None
+            while response is None:
+                status, response = request.next_chunk()
+                if status:
+                    print("Uploaded %d%%." % int(status.progress() * 100))
+            print("Upload Complete! -  ",response.get('id'))
+            try:
+                os.remove(filepath)
+                print("File removed -",filename)
+            except OSError:
+                pass
 
 if __name__ == '__main__':
     main()
